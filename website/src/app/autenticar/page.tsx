@@ -1,6 +1,9 @@
+'use client';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { GoogleIcon } from '@/components/icons/google';
+import { signIn } from 'next-auth/react';
 
 export default function Page() {
   return (
@@ -16,7 +19,10 @@ export default function Page() {
           </div>
           <div className="text-center">
             <p className="text-muted-foreground w-full text-left">* Faça login para criar uma história.</p>
-            <Button className="mt-2 flex items-center justify-center w-full bg-background border border-input text-muted-foreground py-3 rounded-lg hover:bg-accent hover:text-accent-foreground outline-accent">
+            <Button 
+              onClick={() => signIn('google', { redirectTo: '/' })} 
+              className="mt-2 flex items-center justify-center w-full bg-background border border-input text-muted-foreground py-3 rounded-lg hover:bg-accent hover:text-accent-foreground outline-accent"
+            >
               <GoogleIcon className="mr-2 h-5 w-5" />
               Entrar com Google
             </Button>
