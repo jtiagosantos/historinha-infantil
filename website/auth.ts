@@ -2,25 +2,32 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import { getUser } from '@/infra/fauna/services/get-user';
 import { registerUser } from '@/infra/fauna/services/register-user';
- 
+import { registerCustomer } from '@/infra/stripe/services/register-customer';
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google],
   callbacks: {
     async signIn({ user, profile }) {
-      const isRegisteredUser = !!(await getUser({ email: user.email! }));
+      try {
+        const isRegisteredUser = !!(await getUser({ email: user.email! }));
 
-      if (isRegisteredUser) return true;
+        if (isRegisteredUser) return true;
 
-      //TODO: register customer on Stripe
+        const name = (profile?.given_name ?? '').concat(profile?.family_name ?? '');
 
-      await registerUser({
-        email: user.email!,
-        firstName: profile?.given_name ?? '',
-        lastName: profile?.family_name ?? '',
-        customerId: '', //TODO: pass correct data
-      });
+        const { id } = await registerCustomer({ name, email: user.email! });
 
-      return true;
+        await registerUser({
+          email: user.email!,
+          firstName: profile?.given_name ?? '',
+          lastName: profile?.family_name ?? '',
+          customerId: id,
+        });
+
+        return true;
+      } catch {
+        return false;
+      }
     },
   },
 });
