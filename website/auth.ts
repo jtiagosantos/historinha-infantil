@@ -13,9 +13,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (isRegisteredUser) return true;
 
-        const name = (profile?.given_name ?? '').concat(profile?.family_name ?? '');
-
-        const { id } = await registerCustomer({ name, email: user.email! });
+        const { id } = await registerCustomer({ 
+          name: profile?.given_name ?? '', 
+          email: user.email!,
+        });
 
         await registerUser({
           email: user.email!,
