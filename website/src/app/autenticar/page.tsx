@@ -18,7 +18,7 @@ export default function Page() {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <Card className="w-full max-w-lg py-6 pb-3 px-2 shadow-lg rounded-lg bg-card border border-red-400 border-border max-sm:h-screen max-sm:flex max-sm:items-center max-sm:pb-[80px]">
+      <Card className="w-full max-w-lg py-6 pb-3 px-2 shadow-lg rounded-lg bg-card border border-border max-sm:h-screen max-sm:flex max-sm:items-center max-sm:pb-[80px]">
         <CardContent className="space-y-10 max-sm:px-1">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-card-foreground mb-3">Historinha Personalizada</h2>

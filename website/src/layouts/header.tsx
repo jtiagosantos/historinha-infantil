@@ -4,22 +4,22 @@ import { SignOutButton } from '@/components/signout-button';
 import {
   Menubar,
   MenubarContent,
-  MenubarItem,
   MenubarMenu,
-  MenubarSeparator,
   MenubarTrigger,
 } from '@/components/ui/menubar';
 
 export const Header = () => {
   return (
     <header className="px-4 lg:px-6 h-14 flex items-center justify-between border-b">
-      <Link href="/" className="flex items-center gap-2 text-lg font-semibold" prefetch={false}>
-        <BookOpenText className="w-[26px] h-[26px]" />
-        <div className="flex flex-col">
-          <span className="leading-none text-base">Historinha</span>
-          <span className="leading-none text-base">Infantil</span>
-        </div>
-      </Link>
+      <h1 className="font-body">
+        <Link href="/" className="flex items-center gap-2 text-lg font-semibold" prefetch={false}>
+          <BookOpenText className="w-[26px] h-[26px]" />
+          <div className="flex flex-col">
+            <span className="leading-none text-base">Historinha</span>
+            <span className="leading-none text-base">Infantil</span>
+          </div>
+        </Link>
+      </h1>
 
       <nav className="ml-auto flex gap-4 sm:gap-10 font-medium max-[444px]:hidden">
         <Link href="/meus-creditos" className="text-sm hover:underline hover:text-accent underline-offset-4" prefetch={false}>
