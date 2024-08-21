@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 
 export default auth((request) => {
-  const isUnprotectedRoute = request.nextUrl.pathname === '/autenticar';
+  /* const isUnprotectedRoute = request.nextUrl.pathname === '/autenticar';
   const isProtectedRoute = !isUnprotectedRoute;
 
   if (isUnprotectedRoute && !!request.auth) {
@@ -12,7 +12,7 @@ export default auth((request) => {
   if (isProtectedRoute && !request.auth) {
     const url = new URL('/autenticar', request.nextUrl.origin);
     return Response.redirect(url);
-  }
+  } */
 });
 
 export const config = {
