@@ -14,15 +14,11 @@ export const registerUser = async ({
   lastName,
   customerId,
 }: InputRegisterUser) => {
-  const date = new Date();
-
   const user = {
     email,
     first_name: firstName,
     last_name: lastName,
     customer_id: customerId,
-    created_at: date, 
-    updated_at: date, 
   };
 
   await fauna.query(
