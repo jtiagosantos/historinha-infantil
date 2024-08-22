@@ -11,7 +11,8 @@ type RawCredits = {
   price: number;
   purchased_at: {
     isoString: string;
-  }
+  };
+  active: boolean;
 }
 
 export const getCredits = async ({ userId }: InputGetCredits) => {

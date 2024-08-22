@@ -45,7 +45,9 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
         customerId: user!.customer_id,
         priceId: priceId!,
         cancelURL: window.location.href,
-        successURL: window.location.href, //TODO: set correct url
+        successURL: window.location.origin.concat(
+          `/pagamento/processamento?url=${window.location.origin}/meus-creditos`
+        ),
       });
 
       if (!checkoutURL) {
