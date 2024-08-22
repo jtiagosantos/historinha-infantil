@@ -1,4 +1,4 @@
-import { stripe } from "../client";
+import { stripe } from '../client';
 
 type InputRegisterCustomer = {
   name: string;

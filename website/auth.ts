@@ -5,6 +5,7 @@ import { registerUser } from '@/infra/fauna/services/register-user';
 import { registerCustomer } from '@/infra/stripe/services/register-customer';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET,
   providers: [Google],
   callbacks: {
     async signIn({ user, profile }) {
@@ -29,17 +30,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       } catch {
         return false;
       }
-    },
-    async session({ session, token }) {
-      const user = await getUser({ email: token.email! });
-
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: user!.id
-        }
-      };
     },
   },
 });

@@ -10,8 +10,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Check, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Button } from './ui/button';
 import clsx from 'clsx';
+import { ThreeDots } from 'react-loader-spinner';
+import { useSession } from 'next-auth/react';
+import { getUser } from '@/infra/fauna/services/get-user';
+import { createPaymentCheckout } from '@/infra/stripe/services/create-payment-checkout';
 
 const PRICE_IDS = {
   PACKAGE_WITH_ONE_CREDIT: 'price_1Pq3ncGl06TQK25QRcXu4RJA',
@@ -25,11 +30,33 @@ type BuyCreditsModalProps = {
 }
 
 export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }) => {
+  const session = useSession();
+  const router = useRouter();
   const [priceId, setPriceId] = useState<string | undefined>(undefined);
+  const [isLoadingPaymentCheckout, setIsLoadingPaymentCheckout] = useState(false);
 
   const handleCreateCheckout = async () => {
-    //TODO: create checkout
-    //TODO: navigate to checkout
+    try {
+      setIsLoadingPaymentCheckout(true);
+
+      const user = await getUser({ email: session.data?.user?.email! });
+
+      const { checkoutURL } = await createPaymentCheckout({
+        customerId: user!.customer_id,
+        priceId: priceId!,
+        cancelURL: window.location.href,
+        successURL: window.location.href, //TODO: set correct url
+      });
+
+      if (!checkoutURL) {
+        //TODO: show a message
+        return;
+      }
+
+      router.push(checkoutURL);
+    } finally {
+      setIsLoadingPaymentCheckout(false);
+    }
   }
 
   const handleClose = (open: boolean) => {
@@ -113,10 +140,20 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
         </div>
         <DialogFooter>
           <Button 
-            disabled={!priceId} 
+            disabled={!priceId || isLoadingPaymentCheckout} 
+            onClick={handleCreateCheckout}
             className="flex items-center justify-center gap-[6px] bg-primary py-[10px] px-3 font-heading text-sm font-medium tracking-widest rounded-lg hover:bg-accent"
           >
-            Finalizar compra
+            {!isLoadingPaymentCheckout ? 'Finalizar compra' : (
+              <ThreeDots
+                height="20"
+                width="40"
+                radius="9"
+                color="#5c4523"
+                ariaLabel="three-dots-loading"
+                visible={true}
+              />
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

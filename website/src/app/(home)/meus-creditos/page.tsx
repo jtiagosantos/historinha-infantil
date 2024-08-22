@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import { BuyCreditsModal } from '@/components/buy-credits-modal';
 import { getCredits } from '@/infra/fauna/services/get-credits';
 import { formatDate } from '@/utils/format-date';
 import { formatPrice } from '@/utils/format-price';
+import { getUser } from '@/infra/fauna/services/get-user';
 
 type Credits = {
   remainingQuantity: number;
@@ -25,16 +27,18 @@ const PageComponent = () => {
   const [isLoadingCredits, setIsLoadingCredits] = useState(true);
   const [credits, setCredits] = useState<Credits | undefined>(undefined);
 
-  const handleFetchCredits = async (userId: string) => {
+  const handleFetchCredits = async () => {
     try {
-      const credits = await getCredits({ userId });
+      const user = await getUser({ email: session.data?.user?.email! });
+      const credits = await getCredits({ userId: user?.id! });
       if (credits) {
         setCredits({
           remainingQuantity: credits.remaining_quantity,
           totalQuantity: credits.total_quantity,
           price: formatPrice(credits.price),
           purchasedAt: formatDate(credits.purchased_at.isoString),
-        })
+        });
+        //TODO: fetch credits history
       }
     } finally {
       setIsLoadingCredits(false);
@@ -42,8 +46,8 @@ const PageComponent = () => {
   }
 
   useEffect(() => {
-    if (session.data?.user?.id) {
-      handleFetchCredits(session.data.user.id);
+    if (session.data?.user?.email) {
+      handleFetchCredits();
     }
   }, [session]);
 
