@@ -30,5 +30,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false;
       }
     },
+    async session({ session, token }) {
+      const user = await getUser({ email: token.email! });
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user!.id
+        }
+      };
+    },
   },
 });

@@ -25,7 +25,7 @@ type BuyCreditsModalProps = {
 }
 
 export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }) => {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>(undefined);
+  const [priceId, setPriceId] = useState<string | undefined>(undefined);
 
   const handleCreateCheckout = async () => {
     //TODO: create checkout
@@ -33,7 +33,7 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
   }
 
   const handleClose = (open: boolean) => {
-    setSelectedOption(undefined);
+    setPriceId(undefined);
     onOpenChange(open);
   }
 
@@ -46,10 +46,10 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
         </DialogHeader>
         <div className="w-full flex flex-col gap-3">
           <button 
-            onClick={() => setSelectedOption(PRICE_IDS.PACKAGE_WITH_ONE_CREDIT)}
+            onClick={() => setPriceId(PRICE_IDS.PACKAGE_WITH_ONE_CREDIT)}
             className={clsx('w-full border-[2px] rounded-lg flex flex-col items-start gap-2 p-2', {
-              'border-muted-foreground': selectedOption === PRICE_IDS.PACKAGE_WITH_ONE_CREDIT,
-              'border-muted': selectedOption !== PRICE_IDS.PACKAGE_WITH_ONE_CREDIT,
+              'border-muted-foreground': priceId === PRICE_IDS.PACKAGE_WITH_ONE_CREDIT,
+              'border-muted': priceId !== PRICE_IDS.PACKAGE_WITH_ONE_CREDIT,
             })}
           >
             <p className="font-heading text-xl font-semibold text-muted-foreground">R$ 1,49</p>
@@ -65,10 +65,10 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
             </ol>
           </button>
           <button 
-            onClick={() => setSelectedOption(PRICE_IDS.PACKAGE_WITH_THREE_CREDIS)}
+            onClick={() => setPriceId(PRICE_IDS.PACKAGE_WITH_THREE_CREDIS)}
             className={clsx('w-full border-[2px] rounded-lg flex flex-col items-start gap-2 p-2', {
-              'border-muted-foreground': selectedOption === PRICE_IDS.PACKAGE_WITH_THREE_CREDIS,
-              'border-muted': selectedOption !== PRICE_IDS.PACKAGE_WITH_THREE_CREDIS,
+              'border-muted-foreground': priceId === PRICE_IDS.PACKAGE_WITH_THREE_CREDIS,
+              'border-muted': priceId !== PRICE_IDS.PACKAGE_WITH_THREE_CREDIS,
             })}
           >
             <p className="font-heading text-xl font-semibold text-muted-foreground">R$ 3,00</p>
@@ -88,10 +88,10 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
             </ol>
           </button>
           <button 
-            onClick={() => setSelectedOption(PRICE_IDS.PACKAGE_WITH_FIVE_CREDITS)}
+            onClick={() => setPriceId(PRICE_IDS.PACKAGE_WITH_FIVE_CREDITS)}
             className={clsx('w-full border-[2px] rounded-lg flex flex-col items-start gap-2 p-2', {
-              'border-muted-foreground': selectedOption === PRICE_IDS.PACKAGE_WITH_FIVE_CREDITS,
-              'border-muted': selectedOption !== PRICE_IDS.PACKAGE_WITH_FIVE_CREDITS,
+              'border-muted-foreground': priceId === PRICE_IDS.PACKAGE_WITH_FIVE_CREDITS,
+              'border-muted': priceId !== PRICE_IDS.PACKAGE_WITH_FIVE_CREDITS,
             })}
           >
             <p className="font-heading text-xl font-semibold text-muted-foreground">R$ 5,00</p>
@@ -113,7 +113,7 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange }
         </div>
         <DialogFooter>
           <Button 
-            disabled={!selectedOption} 
+            disabled={!priceId} 
             className="flex items-center justify-center gap-[6px] bg-primary py-[10px] px-3 font-heading text-sm font-medium tracking-widest rounded-lg hover:bg-accent"
           >
             Finalizar compra
