@@ -38,8 +38,6 @@ const PageComponent = () => {
   const [credits, setCredits] = useState<Credits | undefined>(undefined);
   const [creditsHistory, setCreditsHistory] = useState<CreditsHistory[]>([]);
 
-  console.log(creditsHistory)
-
   const handleFetchCredits = async () => {
     try {
       const user = (await getUser({ email: session.data?.user?.email! }))!;
@@ -53,7 +51,7 @@ const PageComponent = () => {
           price: formatPrice(credits.price),
           purchasedAt: formatDate(credits.purchased_at.isoString),
         });
-        //TODO: fetch credits history
+
         const history = (await findCreditsHistory({ userId: user.id }))!;
 
         const formattedHistory = history.map((item) => ({
@@ -88,15 +86,23 @@ const PageComponent = () => {
         <BackButton href="/" />
 
         {(!credits || credits?.remainingQuantity === 0) && !isLoadingCredits && (
-          <Button
-            onClick={handleClickOnBuyCredits}
-            className="flex items-center justify-center gap-[6px] bg-primary py-[10px] px-3 font-heading text-sm font-medium tracking-widest rounded-lg hover:bg-accent"
-          >
-            <Coins className="w-[18px] h-[18px]" strokeWidth={2} />
-            Comprar créditos
-          </Button>
+          <>
+            <Button
+              onClick={handleClickOnBuyCredits}
+              className="flex items-center justify-center gap-[6px] bg-primary py-[10px] px-3 font-heading text-sm font-medium tracking-widest rounded-lg hover:bg-accent"
+            >
+              <Coins className="w-[18px] h-[18px]" strokeWidth={2} />
+              Comprar créditos
+            </Button>
+            <BuyCreditsModal
+              open={openModal}
+              onOpenChange={setOpenModal}
+              successURL={window.location.origin.concat(
+                `/pagamento/processamento?url=${window.location.origin}/meus-creditos`
+              )}
+            />
+          </>
         )}
-        <BuyCreditsModal open={openModal} onOpenChange={setOpenModal} />
       </div>
 
       {isLoadingCredits && (

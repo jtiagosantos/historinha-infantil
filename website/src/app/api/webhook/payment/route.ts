@@ -67,6 +67,7 @@ export const POST = async (request: NextRequest) => {
             totalQuantity: creditsInfo.quantity,
             price: creditsInfo.price,
             active: true,
+            purchasedAt: new Date(),
           };
 
           await updateCredits(data);

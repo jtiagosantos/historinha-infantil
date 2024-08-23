@@ -1,5 +1,6 @@
 import localFont from 'next/font/local';
 import { Metadata } from 'next';
+import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
 const dmSans = localFont({
@@ -86,7 +87,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" className={`${dmSans.variable} ${spaceMono.variable} antialiased`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
