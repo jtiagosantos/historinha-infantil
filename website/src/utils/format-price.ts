@@ -1,3 +1,3 @@
-export const formatPrice = (price: number) => {
-  return String(price).concat(',00');
-}
+export const formatPrice = (price: string) => {
+  return price.replace(".", ",");
+};

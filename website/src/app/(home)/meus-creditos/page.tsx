@@ -45,6 +45,11 @@ const PageComponent = () => {
     }
   }
 
+  const handleClickOnBuyCredits = () => {
+    if (!!credits && credits?.remainingQuantity > 0) return;
+    setOpenModal(true);
+  }
+
   useEffect(() => {
     if (session.data?.user?.email) {
       handleFetchCredits();
@@ -56,13 +61,15 @@ const PageComponent = () => {
       <div className="w-full flex items-center justify-between">
         <BackButton href="/" />
 
-        <Button
-          onClick={() => setOpenModal(true)}
-          className="flex items-center justify-center gap-[6px] bg-primary py-[10px] px-3 font-heading text-sm font-medium tracking-widest rounded-lg hover:bg-accent"
-        >
-          <Coins className="w-[18px] h-[18px]" strokeWidth={2} />
-          Comprar créditos
-        </Button>
+        {(!credits || credits?.remainingQuantity === 0) && !isLoadingCredits && (
+          <Button
+            onClick={handleClickOnBuyCredits}
+            className="flex items-center justify-center gap-[6px] bg-primary py-[10px] px-3 font-heading text-sm font-medium tracking-widest rounded-lg hover:bg-accent"
+          >
+            <Coins className="w-[18px] h-[18px]" strokeWidth={2} />
+            Comprar créditos
+          </Button>
+        )}
         <BuyCreditsModal open={openModal} onOpenChange={setOpenModal} />
       </div>
 
@@ -91,7 +98,7 @@ const PageComponent = () => {
               </p>
               <p className="font-body text-base text-muted-foreground">restante/total</p>
             </div>
-    
+
             <div>
               <p className="font-heading tracking-widest font-semibold text-base text-muted-foreground mb-1">Informações Gerais</p>
               <p className="font-body text-muted-foreground text-base">
@@ -104,7 +111,7 @@ const PageComponent = () => {
                 - Pacote comprado por R$ {credits.price}
               </p>
             </div>
-    
+
             <div>
               <p className="font-heading tracking-widest font-semibold text-base text-muted-foreground">
                 Histórico de Créditos
