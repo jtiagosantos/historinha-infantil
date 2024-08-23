@@ -13,6 +13,8 @@ import { getCredits } from '@/infra/fauna/services/get-credits';
 import { formatDate } from '@/utils/format-date';
 import { formatPrice } from '@/utils/format-price';
 import { getUser } from '@/infra/fauna/services/get-user';
+import { findCreditsHistory } from '@/infra/fauna/services/find-credits-history';
+import { CreditsHistoryOperation } from '@/infra/fauna/enums/credits-history-operation';
 
 type Credits = {
   remainingQuantity: number;
@@ -21,16 +23,29 @@ type Credits = {
   purchasedAt: string;
 }
 
+type CreditsHistory = {
+  id: string;
+  creditsQuantity: number;
+  operation: keyof typeof CreditsHistoryOperation;
+  text: string;
+  createdAt: string;
+}
+
 const PageComponent = () => {
   const session = useSession();
   const [openModal, setOpenModal] = useState(false);
   const [isLoadingCredits, setIsLoadingCredits] = useState(true);
   const [credits, setCredits] = useState<Credits | undefined>(undefined);
+  const [creditsHistory, setCreditsHistory] = useState<CreditsHistory[]>([]);
+
+  console.log(creditsHistory)
 
   const handleFetchCredits = async () => {
     try {
-      const user = await getUser({ email: session.data?.user?.email! });
-      const credits = await getCredits({ userId: user?.id! });
+      const user = (await getUser({ email: session.data?.user?.email! }))!;
+
+      const credits = await getCredits({ userId: user.id });
+
       if (credits) {
         setCredits({
           remainingQuantity: credits.remaining_quantity,
@@ -39,6 +54,17 @@ const PageComponent = () => {
           purchasedAt: formatDate(credits.purchased_at.isoString),
         });
         //TODO: fetch credits history
+        const history = (await findCreditsHistory({ userId: user.id }))!;
+
+        const formattedHistory = history.map((item) => ({
+          id: item.id,
+          creditsQuantity: item.credits_quantity,
+          operation: item.operation,
+          text: item.text,
+          createdAt: formatDate(item.ts.isoString),
+        }));
+
+        setCreditsHistory(formattedHistory);
       }
     } finally {
       setIsLoadingCredits(false);
@@ -118,24 +144,24 @@ const PageComponent = () => {
               </p>
               <p className="font-heading tracking-wider text-muted-foreground text-sm">Os 10 últimos registros</p>
               <ol className="mt-6 space-y-4">
-                <li className="w-full flex items-center justify-between">
-                  <p className="font-body text-base text-muted-foreground">1. Criação de história</p>
-                  <div className="flex items-center gap-5 max-[494px]:flex-col max-[494px]:items-end max-[494px]:gap-1">
-                    <p className="min-w-[124px] text-center font-body font-medium text-sm text-red-700 bg-red-400 py-1 px-[6px] rounded">
-                      -1 crédito(s)
-                    </p>
-                    <p className="font-body text-base text-muted-foreground">15/08/2024</p>
-                  </div>
-                </li>
-                <li className="w-full flex items-center justify-between">
-                  <p className="font-body text-base text-muted-foreground">2. Compra de crédito(s)</p>
-                  <div className="flex items-center gap-5 max-[494px]:flex-col max-[494px]:items-end max-[494px]:gap-1">
-                    <p className="min-w-[124px] text-center font-body font-medium text-sm text-green-700 bg-green-400 py-1 px-[6px] rounded">
-                      +3 crédito(s)
-                    </p>
-                    <p className="font-body text-base text-muted-foreground">10/08/2024</p>
-                  </div>
-                </li>
+                {creditsHistory.map((history, index) => (
+                  <li key={history.id} className="w-full flex items-center justify-between">
+                    <p className="font-body text-base text-muted-foreground">{index + 1}. {history.text}</p>
+                    <div className="flex items-center gap-5 max-[494px]:flex-col max-[494px]:items-end max-[494px]:gap-1">
+                      {history.operation === 'EARNING' && (
+                        <p className="min-w-[124px] text-center font-body font-medium text-sm text-green-700 bg-green-300 py-1 px-[6px] rounded">
+                          +{history.creditsQuantity} crédito(s)
+                        </p>
+                      )}
+                      {history.operation === 'SPENDING' && (
+                        <p className="min-w-[124px] text-center font-body font-medium text-sm text-red-700 bg-red-300 py-1 px-[6px] rounded">
+                          -{history.creditsQuantity} crédito(s)
+                        </p>
+                      )}
+                      <p className="font-body text-base text-muted-foreground">{history.createdAt}</p>
+                    </div>
+                  </li>
+                ))}
               </ol>
             </div>
           </div>
