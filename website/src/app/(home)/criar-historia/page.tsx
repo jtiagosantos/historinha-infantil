@@ -25,6 +25,7 @@ import { updateCredits } from '@/infra/fauna/services/update-credits';
 import { registerCreditsHistory } from '@/infra/fauna/services/register-credits-history';
 import { CreditsHistoryOperation } from '@/infra/fauna/enums/credits-history-operation';
 import { ConfirmationModal } from './confirmation-modal';
+import { sendStoryPreferencesToQueue } from '@/infra/sqs/services/send-story-preferences-to-queue';
 
 const THREE_SECONDS = 1000 * 3;
 
@@ -120,7 +121,25 @@ const PageComponent = () => {
         return;
       }
 
-      //TODO: send preferences to the queue
+      await sendStoryPreferencesToQueue({
+        user: {
+          id: user.id,
+          email: user.email,
+        },
+        preferences: {
+          child: {
+            name: form.nome,
+            age: Number(form.idade),
+          },
+          options: {
+            gender: form.opcoes.genero,
+            characters: form.opcoes.personagens,
+            lessonOrMoral: form.opcoes['licao-ou-moral'],
+            environment: form.opcoes.ambiente,
+            style: form.opcoes.estilo,
+          },
+        },
+      });
 
       await updateCredits({
         id: credits.id,
