@@ -1,8 +1,5 @@
 service: story-creator
 
-build:
-  esbuild: false
-
 provider:
   name: aws
   runtime: nodejs18.x

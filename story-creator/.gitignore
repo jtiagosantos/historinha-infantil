@@ -6,7 +6,7 @@ node_modules
 .serverless
 
 # Environment Variables
-.env.local
+.env
 .env.development
 .env.production
 
