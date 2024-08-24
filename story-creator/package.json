@@ -1,0 +1,14 @@
+{
+  "name": "story-creator",
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "prettier:check": "npx prettier . --check",
+    "prettier:fix": "npx prettier . --write"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4"
+  }
+}
