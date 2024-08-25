@@ -4,7 +4,7 @@ import { handler } from './app';
 
 const body = {
   user: {
-    id: 'cm08fkys5000008l7beked8pc',
+    id: '406881688802558016',
     email: 'tiagosan040@gmail.com',
   },
   preferences: {

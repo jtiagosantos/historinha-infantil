@@ -2,6 +2,7 @@ import { SQSEvent } from 'aws-lambda';
 import { bodySchema } from './schemas/body-schema';
 import { createStory } from './infra/openai/services/create-story';
 import { Story } from './types/story';
+import { saveStory } from './infra/fauna/services/save-story';
 
 export const handler = async (event: SQSEvent) => {
   try {
@@ -17,10 +18,16 @@ export const handler = async (event: SQSEvent) => {
         throw new Error(`❌ Error creating story for user ${user.email}: ${error}`);
       }
 
-      console.log(story);
-
       try {
-        //TODO: save story on database (fauna db)
+        await saveStory({
+          userId: user.id,
+          preferences,
+          story: {
+            title: story.title,
+            readingTime: story.readingTime,
+            text: story.text,
+          },
+        });
       } catch (error) {
         throw new Error(`❌ Error saving story for user ${user.email}: ${error}`);
       }
