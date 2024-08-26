@@ -1,17 +1,9 @@
 import { fql } from "fauna";
 import { fauna } from "../client";
+import { RawStory } from "../types/raw-story";
 
 type InputFindStories = {
   userId: string;
-};
-
-type RawStory = {
-  id: string;
-  story: {
-    title: string;
-    reading_time: number;
-    text: string[];
-  };
 };
 
 export const findStories = async ({ userId }: InputFindStories) => {
