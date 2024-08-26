@@ -15,7 +15,8 @@ export const handler = async (event: SQSEvent) => {
       try {
         story = await createStory({ preferences });
       } catch (error) {
-        throw new Error(`❌ Error creating story for user ${user.email}: ${error}`);
+        console.log(error);
+        throw new Error(`❌ Error creating story for user ${user.email}`);
       }
 
       try {
@@ -29,18 +30,19 @@ export const handler = async (event: SQSEvent) => {
           },
         });
       } catch (error) {
-        throw new Error(`❌ Error saving story for user ${user.email}: ${error}`);
+        console.log(error);
+        throw new Error(`❌ Error saving story for user ${user.email}`);
       }
 
       try {
         //TODO: send story to EmailsQueue
       } catch (error) {
-        throw new Error(
-          `❌ Error sending story to queue for user ${user.email}: ${error}`,
-        );
+        console.log(error);
+        throw new Error(`❌ Error sending story to queue for user ${user.email}`);
       }
     }
   } catch (error) {
-    throw new Error(`❌ Internal Server Error: ${error}`);
+    console.log(error);
+    throw new Error(`❌ Internal Server Error`);
   }
 };
