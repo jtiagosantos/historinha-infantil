@@ -1,21 +1,26 @@
-import { stripe } from '../client';
+import { http } from "@/infra/http/axios/client";
 
 type InputRegisterCustomer = {
   name: string;
   email: string;
-}
+};
 
 type OutputRegisterCustomer = {
-  id: string;
-}
+  customer: {
+    id: string;
+  };
+  code: number;
+  message: string;
+};
 
-export const registerCustomer = async ({ 
+export const registerCustomer = async ({
   name,
   email,
 }: InputRegisterCustomer): Promise<OutputRegisterCustomer> => {
-  const customer = await stripe.customers.create({ name, email });
+  const { data } = await http.post("/gateway/payment/customer/register", {
+    name,
+    email,
+  });
 
-  return {
-    id: customer.id,
-  }
-}
+  return data;
+};

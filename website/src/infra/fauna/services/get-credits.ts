@@ -1,25 +1,17 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
+import { responseSchema } from "@/app/api/credits/user/[id]/route";
+import { http } from "@/infra/http/axios/client";
+import { z } from "zod";
 
 type InputGetCredits = {
   userId: string;
 };
 
-type RawCredits = {
-  id: string;
-  remaining_quantity: number;
-  total_quantity: number;
-  price: string;
-  purchased_at: {
-    isoString: string;
-  };
-  active: boolean;
-};
+type OutputGetCredits = z.infer<typeof responseSchema>;
 
-export const getCredits = async ({ userId }: InputGetCredits) => {
-  const { data } = await fauna.query<RawCredits | null>(
-    fql`credits.byUserId(${userId}).first()`
-  );
+export const getCredits = async ({
+  userId,
+}: InputGetCredits): Promise<OutputGetCredits> => {
+  const { data } = await http.get(`/credits/user/${userId}`);
 
   return data;
 };

@@ -42,10 +42,10 @@ export const BuyCreditsModal: FC<BuyCreditsModalProps> = ({ open, onOpenChange, 
     try {
       setIsLoadingPaymentCheckout(true);
 
-      const user = await getUser({ email: session.data?.user?.email! });
+      const { user } = await getUser({ email: session.data?.user?.email! });
 
       const { checkoutURL } = await createPaymentCheckout({
-        customerId: user!.customer_id,
+        customerId: user!.customerId,
         priceId: priceId!,
         cancelURL: window.location.href,
         successURL,

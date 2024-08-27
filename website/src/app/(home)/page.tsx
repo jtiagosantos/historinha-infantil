@@ -26,15 +26,15 @@ const PageComponent = () => {
 
   const handleFetchStories = async () => {
     try {
-      const user = (await getUser({ email: session.data?.user?.email! }))!;
+      const { user } = await getUser({ email: session.data?.user?.email! });
 
-      const stories = await findStories({ userId: user.id });
+      const { stories } = await findStories({ userId: user!.id });
 
-      if (stories) {
+      if (stories.length > 0) {
         const formattedStories = stories.map((story) => ({
           id: story.id,
           title: story.story.title,
-          readingTime: story.story.reading_time,
+          readingTime: story.story.readingTime,
           text: formatStoryTextPreview(story.story.text.join(' ')),
         }));
 

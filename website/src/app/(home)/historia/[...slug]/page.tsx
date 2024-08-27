@@ -13,13 +13,13 @@ export default async function Page({ params }: PageProps) {
   const [_, storyId] = pathname.split('--');
 
   const handleFetchStory = async () => {
-    const story = await getStory({ id: storyId });
+    const { story } = await getStory({ id: storyId });
 
     if (story) {
       return {
         id: story.id,
         title: story.story.title,
-        readingTime: story.story.reading_time,
+        readingTime: story.story.readingTime,
         text: story.story.text
       };
     }

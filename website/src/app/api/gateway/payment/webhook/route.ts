@@ -44,15 +44,15 @@ export const POST = async (request: NextRequest) => {
       try {
         const customer = event.data.object.customer_details;
 
-        const user = (await getUser({ email: customer?.email! }))!;
+        const { user } = (await getUser({ email: customer?.email! }))!;
 
-        const credits = await getCredits({ userId: user.id });
+        const { credits } = await getCredits({ userId: user!.id });
 
         const creditsInfo = creditsByAmount[event.data.object.amount_total!];
 
         if (!credits) {
           const data = {
-            userId: user.id,
+            userId: user!.id,
             remainingQuantity: creditsInfo.quantity,
             totalQuantity: creditsInfo.quantity,
             price: creditsInfo.price,
@@ -74,7 +74,7 @@ export const POST = async (request: NextRequest) => {
         }
 
         const data = {
-          userId: user.id,
+          userId: user!.id,
           creditsQuantity: creditsInfo.quantity,
           operation: CreditsHistoryOperation.EARNING,
           text: "Compra de crédito(s)",

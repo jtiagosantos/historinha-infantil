@@ -1,6 +1,5 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
 import { CreditsHistoryOperation } from "../enums/credits-history-operation";
+import { http } from "@/infra/http/axios/client";
 
 type InputRegisterCreditsHistory = {
   userId: string;
@@ -9,18 +8,23 @@ type InputRegisterCreditsHistory = {
   text: string;
 };
 
+type OutputRegisterCreditsHistory = {
+  code: string;
+  message: string | null;
+};
+
 export const registerCreditsHistory = async ({
   userId,
   creditsQuantity,
   operation,
   text,
-}: InputRegisterCreditsHistory) => {
-  const data = {
-    user_id: userId,
-    credits_quantity: creditsQuantity,
+}: InputRegisterCreditsHistory): Promise<OutputRegisterCreditsHistory> => {
+  const { data } = await http.post("credits/history/register", {
+    userId,
+    creditsQuantity,
     operation,
     text,
-  };
+  });
 
-  await fauna.query(fql`credits_history.create(${{ ...data }})`);
+  return data;
 };

@@ -95,9 +95,9 @@ const PageComponent = () => {
     try {
       setIsLoading(true);
 
-      const user = (await getUser({ email: session.data?.user?.email! }))!;
+      const { user } = await getUser({ email: session.data?.user?.email! });
 
-      const credits = await getCredits({ userId: user.id });
+      const { credits } = await getCredits({ userId: user!.id });
 
       if (!credits) {
         setOpenBuyCreditsModal(true);
@@ -110,7 +110,7 @@ const PageComponent = () => {
         return;
       }
 
-      if (credits.remaining_quantity === 0) {
+      if (credits.remainingQuantity === 0) {
         setOpenBuyCreditsModal(true);
 
         const { id: toastId } = toast({ description: 'Você não possui créditos suficientes para criar uma história' });
@@ -123,8 +123,8 @@ const PageComponent = () => {
 
       await sendStoryPreferencesToQueue({
         user: {
-          id: user.id,
-          email: user.email,
+          id: user!.id,
+          email: user!.email,
         },
         preferences: {
           child: {
@@ -143,12 +143,12 @@ const PageComponent = () => {
 
       await updateCredits({
         id: credits.id,
-        remainingQuantity: credits.remaining_quantity - 1,
-        active: credits.remaining_quantity - 1 !== 0,
+        remainingQuantity: credits.remainingQuantity - 1,
+        active: credits.remainingQuantity - 1 !== 0,
       });
 
       await registerCreditsHistory({
-        userId: user.id,
+        userId: user!.id,
         creditsQuantity: 1,
         operation: CreditsHistoryOperation.SPENDING,
         text: "Criação de história",

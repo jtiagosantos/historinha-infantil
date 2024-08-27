@@ -1,27 +1,17 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
-import { CreditsHistoryOperation } from "../enums/credits-history-operation";
+import { http } from "@/infra/http/axios/client";
+import { responseSchema } from "@/app/api/credits/history/user/[id]/route";
+import { z } from "zod";
 
 type InputFindCreditsHistory = {
   userId: string;
 };
 
-type RawCreditsHistory = {
-  id: string;
-  credits_quantity: number;
-  text: string;
-  ts: {
-    isoString: string;
-  };
-  operation: keyof typeof CreditsHistoryOperation;
-};
+type OutputFindCreditsHistory = z.infer<typeof responseSchema>;
 
 export const findCreditsHistory = async ({
   userId,
-}: InputFindCreditsHistory) => {
-  const { data } = await fauna.query<{ data: RawCreditsHistory[] } | null>(
-    fql`credits_history.byUserId(${userId}).order(desc(.ts)).take(10)`
-  );
+}: InputFindCreditsHistory): Promise<OutputFindCreditsHistory> => {
+  const { data } = await http.get(`/credits/history/user/${userId}`);
 
-  return data?.data;
+  return data;
 };

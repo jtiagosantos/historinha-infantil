@@ -40,26 +40,23 @@ const PageComponent = () => {
 
   const handleFetchCredits = async () => {
     try {
-      const user = (await getUser({ email: session.data?.user?.email! }))!;
+      const { user } = await getUser({ email: session.data?.user?.email! });
 
-      const credits = await getCredits({ userId: user.id });
+      const { credits } = await getCredits({ userId: user!.id });
 
       if (credits) {
         setCredits({
-          remainingQuantity: credits.remaining_quantity,
-          totalQuantity: credits.total_quantity,
+          remainingQuantity: credits.remainingQuantity,
+          totalQuantity: credits.totalQuantity,
           price: formatPrice(credits.price),
-          purchasedAt: formatDate(credits.purchased_at.isoString),
+          purchasedAt: formatDate(credits.purchasedAt),
         });
 
-        const history = (await findCreditsHistory({ userId: user.id }))!;
+        const { history } = await findCreditsHistory({ userId: user!.id });
 
         const formattedHistory = history.map((item) => ({
-          id: item.id,
-          creditsQuantity: item.credits_quantity,
-          operation: item.operation,
-          text: item.text,
-          createdAt: formatDate(item.ts.isoString),
+          ...item,
+          createdAt: formatDate(item.createdAt),
         }));
 
         setCreditsHistory(formattedHistory);

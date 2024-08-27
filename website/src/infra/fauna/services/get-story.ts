@@ -1,13 +1,17 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
-import { RawStory } from "../types/raw-story";
+import { responseSchema } from "@/app/api/stories/unique/[id]/route";
+import { http } from "@/infra/http/axios/client";
+import { z } from "zod";
 
 type InputGetStory = {
   id: string;
 };
 
-export const getStory = async ({ id }: InputGetStory) => {
-  const { data } = await fauna.query<RawStory | null>(fql`stories.byId(${id})`);
+type OutputGetStory = z.infer<typeof responseSchema>;
+
+export const getStory = async ({
+  id,
+}: InputGetStory): Promise<OutputGetStory> => {
+  const { data } = await http.get(`/stories/unique/${id}`);
 
   return data;
 };

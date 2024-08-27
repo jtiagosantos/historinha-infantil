@@ -1,5 +1,4 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
+import { http } from "@/infra/http/axios/client";
 
 type InputRegisterCredits = {
   userId: string;
@@ -9,20 +8,25 @@ type InputRegisterCredits = {
   active: boolean;
 };
 
+type OutputRegisterCredits = {
+  code: number;
+  message: string;
+};
+
 export const registerCredits = async ({
   userId,
   remainingQuantity,
   totalQuantity,
   price,
   active,
-}: InputRegisterCredits) => {
-  const data = {
-    user_id: userId,
-    remaining_quantity: remainingQuantity,
-    total_quantity: totalQuantity,
+}: InputRegisterCredits): Promise<OutputRegisterCredits> => {
+  const { data } = await http.post("/credits/register", {
+    userId,
+    remainingQuantity,
+    totalQuantity,
     price,
     active,
-  };
+  });
 
-  await fauna.query(fql`credits.create(${{ ...data }})`);
+  return data;
 };

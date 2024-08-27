@@ -1,15 +1,17 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
-import { RawStory } from "../types/raw-story";
+import { responseSchema } from "@/app/api/stories/many/user/[userId]/route";
+import { http } from "@/infra/http/axios/client";
+import { z } from "zod";
 
 type InputFindStories = {
   userId: string;
 };
 
-export const findStories = async ({ userId }: InputFindStories) => {
-  const { data } = await fauna.query<{ data: RawStory[] } | null>(
-    fql`stories.byUserId(${userId}).order(desc(.ts))`
-  );
+type OutputFindStories = z.infer<typeof responseSchema>;
 
-  return data?.data;
+export const findStories = async ({
+  userId,
+}: InputFindStories): Promise<OutputFindStories> => {
+  const { data } = await http.get(`/stories/many/user/${userId}`);
+
+  return data;
 };

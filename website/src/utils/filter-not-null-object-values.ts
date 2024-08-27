@@ -1,6 +1,6 @@
 type CustomObject = Record<string, any>;
 
-export const filterNotUndefinedObjectValues = <T = CustomObject>(
+export const filterNotNullObjectValues = <T = CustomObject>(
   object: CustomObject
 ) => {
   const filteredObject = {} as CustomObject;
@@ -8,7 +8,7 @@ export const filterNotUndefinedObjectValues = <T = CustomObject>(
   Object.keys(object).forEach((key) => {
     const value = object[key];
 
-    if (value !== undefined) {
+    if (value !== null) {
       filteredObject[key] = value;
     }
   });

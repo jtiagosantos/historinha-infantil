@@ -1,37 +1,30 @@
-import { stripe } from '../client';
+import { http } from "@/infra/http/axios/client";
 
 type InputCreatePaymentCheckout = {
   customerId: string;
   priceId: string;
   cancelURL: string;
   successURL: string;
-}
+};
 
 type OutputCreatePaymentCheckout = {
   checkoutURL: string | null;
-}
+  code: number;
+  message: string;
+};
 
-export const createPaymentCheckout = async ({ 
-  customerId, 
-  priceId, 
-  cancelURL, 
+export const createPaymentCheckout = async ({
+  customerId,
+  priceId,
+  cancelURL,
   successURL,
 }: InputCreatePaymentCheckout): Promise<OutputCreatePaymentCheckout> => {
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    cancel_url: cancelURL,
-    success_url: successURL,
-    locale: 'pt-BR',
+  const { data } = await http.post("/gateway/payment/checkout/session/create", {
+    customerId,
+    priceId,
+    cancelURL,
+    successURL,
   });
 
-  return {
-    checkoutURL: session.url,
-  };
-}
+  return data;
+};

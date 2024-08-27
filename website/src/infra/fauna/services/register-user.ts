@@ -1,27 +1,29 @@
-import { fql } from 'fauna';
-import { fauna } from '../client';
+import { http } from "@/infra/http/axios/client";
 
 type InputRegisterUser = {
+  customerId: string;
   email: string;
   firstName: string;
   lastName: string;
-  customerId: string;
-}
+};
+
+type OutputRegisterUser = {
+  code: number;
+  message: string;
+};
 
 export const registerUser = async ({
+  customerId,
   email,
   firstName,
   lastName,
-  customerId,
-}: InputRegisterUser) => {
-  const user = {
+}: InputRegisterUser): Promise<OutputRegisterUser> => {
+  const { data } = await http.post("/users/register", {
+    customerId,
     email,
-    first_name: firstName,
-    last_name: lastName,
-    customer_id: customerId,
-  };
+    firstName,
+    lastName,
+  });
 
-  await fauna.query(
-    fql`users.create(${{ ...user }})`,
-  );
-}
+  return data;
+};

@@ -36,8 +36,8 @@ const PageComponent = () => {
     fetchingCredits.current = true;
 
     try {
-      const user = await getUser({ email: session.data?.user?.email! });
-      const credits = await getCredits({ userId: user?.id! });
+      const { user } = await getUser({ email: session.data?.user?.email! });
+      const { credits } = await getCredits({ userId: user!.id });
 
       if (credits?.active) {
         cancelPolling();

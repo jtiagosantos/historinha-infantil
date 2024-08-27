@@ -1,3 +1,5 @@
+import { http } from "@/infra/http/axios/client";
+
 type InputSendStoryPreferencesToQueue = {
   user: {
     id: string;
@@ -22,11 +24,5 @@ export const sendStoryPreferencesToQueue = async ({
   user,
   preferences,
 }: InputSendStoryPreferencesToQueue) => {
-  await fetch(window.location.origin.concat("/api/queue/stories"), {
-    method: "POST",
-    body: JSON.stringify({
-      user,
-      preferences,
-    }),
-  });
+  await http.post("/queue/stories/send", { user, preferences });
 };

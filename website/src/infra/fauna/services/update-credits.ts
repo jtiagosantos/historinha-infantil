@@ -1,6 +1,4 @@
-import { fql } from "fauna";
-import { fauna } from "../client";
-import { filterNotUndefinedObjectValues } from "@/utils/filter-not-undefined-object-values";
+import { http } from "@/infra/http/axios/client";
 
 type InputUpdateCredits = {
   id: string;
@@ -11,6 +9,11 @@ type InputUpdateCredits = {
   purchasedAt?: Date;
 };
 
+type OutputUpdateCredits = {
+  code: string;
+  message: string | null;
+};
+
 export const updateCredits = async ({
   id,
   remainingQuantity,
@@ -18,14 +21,14 @@ export const updateCredits = async ({
   price,
   active,
   purchasedAt,
-}: InputUpdateCredits) => {
-  const data = filterNotUndefinedObjectValues({
-    remaining_quantity: remainingQuantity,
-    total_quantity: totalQuantity,
+}: InputUpdateCredits): Promise<OutputUpdateCredits> => {
+  const { data } = await http.put(`/credits/update/${id}`, {
+    remainingQuantity,
+    totalQuantity,
     price,
     active,
-    purchased_at: purchasedAt,
+    purchasedAt,
   });
 
-  await fauna.query(fql`credits.byId(${id})?.update(${{ ...data }})`);
+  return data;
 };
