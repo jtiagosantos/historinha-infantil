@@ -3,6 +3,7 @@ const slsw = require('serverless-webpack');
 const nodeExternals = require('webpack-node-externals');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   target: 'node',
@@ -42,5 +43,8 @@ module.exports = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: ['./src/templates/**'],
+    }),
   ],
 };

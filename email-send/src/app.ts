@@ -11,13 +11,16 @@ export const handler = async (event: SQSEvent) => {
       const { body } = record;
       const { user, story } = bodySchema.parse(JSON.parse(body));
 
-      const rootDir =
-        process.env.NODE_ENV === 'production' ? process.env.LAMBDA_TASK_ROOT! : __dirname;
+      let htmlFilePath;
 
-      const htmlFilePath = path.join(
-        rootDir,
-        '/templates/email-about-created-story.html',
-      );
+      if (process.env.NODE_ENV === 'production') {
+        htmlFilePath = path.join(
+          process.env.LAMBDA_TASK_ROOT as string,
+          '/src/templates/email-about-created-story.html',
+        );
+      } else {
+        htmlFilePath = path.join(__dirname, '/templates/email-about-created-story.html');
+      }
       const emailTemplate = fs.readFileSync(htmlFilePath, 'utf-8');
 
       const { error } = await sendEmail({
