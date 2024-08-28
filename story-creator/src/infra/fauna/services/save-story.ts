@@ -23,7 +23,15 @@ type InputSaveStory = {
   };
 };
 
-export const saveStory = async ({ userId, preferences, story }: InputSaveStory) => {
+type OutputSaveStory = {
+  id: string;
+};
+
+export const saveStory = async ({
+  userId,
+  preferences,
+  story,
+}: InputSaveStory): Promise<OutputSaveStory> => {
   const data = {
     user_id: userId,
     preferences: {
@@ -46,5 +54,9 @@ export const saveStory = async ({ userId, preferences, story }: InputSaveStory) 
     },
   };
 
-  await fauna.query(fql`stories.create(${{ ...data }})`);
+  const { data: createdStory } = await fauna.query(fql`stories.create(${{ ...data }})`);
+
+  return {
+    id: createdStory.id,
+  };
 };

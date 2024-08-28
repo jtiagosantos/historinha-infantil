@@ -3,6 +3,7 @@ import { bodySchema } from './schemas/body-schema';
 import { createStory } from './infra/openai/services/create-story';
 import { Story } from './types/story';
 import { saveStory } from './infra/fauna/services/save-story';
+import { sendEmailToQueue } from './infra/sqs/services/send-email-to-queue';
 
 export const handler = async (event: SQSEvent) => {
   try {
@@ -20,7 +21,7 @@ export const handler = async (event: SQSEvent) => {
       }
 
       try {
-        await saveStory({
+        const { id: storyId } = await saveStory({
           userId: user.id,
           preferences,
           story: {
@@ -29,13 +30,25 @@ export const handler = async (event: SQSEvent) => {
             text: story.text,
           },
         });
+
+        story = {
+          ...story,
+          id: storyId,
+        };
       } catch (error) {
         console.log(error);
         throw new Error(`❌ Error saving story for user ${user.email}`);
       }
 
       try {
-        //TODO: send story to EmailsQueue
+        await sendEmailToQueue({
+          user: {
+            email: user.email,
+          },
+          story: {
+            id: story.id,
+          },
+        });
       } catch (error) {
         console.log(error);
         throw new Error(`❌ Error sending story to queue for user ${user.email}`);
