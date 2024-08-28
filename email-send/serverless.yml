@@ -1,0 +1,33 @@
+service: email-send
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  architecture: x86_64
+  region: us-east-1
+  timeout: 120
+  memorySize: 1024
+  stage: ${opt:stage, 'dev'}
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    excludeFiles: ./src/**/*.(spec|test).ts
+    packager: npm
+    includeModules: true
+    keepOutputDirectory: true
+  dotenv:
+    logging: false
+  settings:
+    http:
+      allowMethods: any
+      path: /{proxy+}
+
+functions:
+  app:
+    name: ${self:service}-${self:provider.stage}
+    handler: src/app.handler
