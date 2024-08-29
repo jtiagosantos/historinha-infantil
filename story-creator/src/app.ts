@@ -47,6 +47,7 @@ export const handler = async (event: SQSEvent) => {
           },
           story: {
             id: story.id,
+            title: story.title,
           },
         });
       } catch (error) {

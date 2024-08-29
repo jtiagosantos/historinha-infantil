@@ -8,6 +8,7 @@ type InputSendEmailToQueue = {
   };
   story: {
     id: string;
+    title: string;
   };
 };
 
