@@ -6,7 +6,7 @@ type InputUpdateCredits = {
   totalQuantity?: number;
   price?: string;
   active?: boolean;
-  purchasedAt?: Date;
+  purchasedAt?: string;
 };
 
 type OutputUpdateCredits = {

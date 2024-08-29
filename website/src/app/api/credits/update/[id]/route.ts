@@ -18,7 +18,7 @@ const bodySchema = z
     total_quantity: input.totalQuantity,
     price: input.price,
     active: input.active,
-    purchased_at: input.purchasedAt,
+    purchased_at: input.purchasedAt ? new Date(input.purchasedAt) : null,
   }));
 
 type Context = {
