@@ -161,7 +161,7 @@ const PageComponent = () => {
                           -{history.creditsQuantity} crédito(s)
                         </p>
                       )}
-                      <p className="font-body text-base text-muted-foreground">{history.createdAt}</p>
+                      <p className="font-body text-base text-muted-foreground max-[494px]:text-[13px]">{history.createdAt}</p>
                     </div>
                   </li>
                 ))}
