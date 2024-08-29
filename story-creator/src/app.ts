@@ -4,6 +4,7 @@ import { createStory } from './infra/openai/services/create-story';
 import { Story } from './types/story';
 import { saveStory } from './infra/fauna/services/save-story';
 import { sendEmailToQueue } from './infra/sqs/services/send-email-to-queue';
+import { calculateReadingTime } from './helpers/calculate-reading-time';
 
 export const handler = async (event: SQSEvent) => {
   try {
@@ -26,7 +27,7 @@ export const handler = async (event: SQSEvent) => {
           preferences,
           story: {
             title: story.title,
-            readingTime: story.readingTime,
+            readingTime: calculateReadingTime(story.text),
             text: story.text,
           },
         });
