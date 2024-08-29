@@ -1,40 +1,8 @@
 import { fauna } from "@/infra/fauna/client";
+import { getCreditsResponseSchema } from "@/infra/fauna/schemas/get-credits-response-schema";
 import { isAxiosError } from "axios";
 import { fql } from "fauna";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-export const responseSchema = z
-  .object({
-    credits: z
-      .object({
-        id: z.string(),
-        remaining_quantity: z.number(),
-        total_quantity: z.number(),
-        price: z.string(),
-        purchased_at: z.object({
-          isoString: z.string(),
-        }),
-        active: z.boolean(),
-      })
-      .nullable(),
-    code: z.number(),
-    message: z.string().nullable(),
-  })
-  .transform((input) => ({
-    credits: !!input.credits
-      ? {
-          id: input.credits.id,
-          remainingQuantity: input.credits.remaining_quantity,
-          totalQuantity: input.credits.total_quantity,
-          price: input.credits.price,
-          purchasedAt: input.credits.purchased_at.isoString,
-          active: input.credits.active,
-        }
-      : null,
-    code: input.code,
-    message: input.message,
-  }));
 
 type Context = {
   params: {
@@ -48,7 +16,7 @@ export const GET = async (_: NextRequest, context: Context) => {
 
     const { data } = await fauna.query(fql`credits.byUserId(${id}).first()`);
 
-    const response = responseSchema.parse({
+    const response = getCreditsResponseSchema.parse({
       credits: data,
       code: 200,
       message: !data ? "Credits not found" : null,

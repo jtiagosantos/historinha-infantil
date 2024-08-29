@@ -1,12 +1,14 @@
 import { http } from "@/infra/http/axios/client";
-import { responseSchema } from "@/app/api/credits/history/user/[id]/route";
 import { z } from "zod";
+import { findCreditsHistoryResponseSchema } from "../schemas/find-credits-history-response-schema";
 
 type InputFindCreditsHistory = {
   userId: string;
 };
 
-type OutputFindCreditsHistory = z.infer<typeof responseSchema>;
+type OutputFindCreditsHistory = z.infer<
+  typeof findCreditsHistoryResponseSchema
+>;
 
 export const findCreditsHistory = async ({
   userId,

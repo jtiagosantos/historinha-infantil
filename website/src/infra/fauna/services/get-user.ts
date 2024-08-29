@@ -1,12 +1,12 @@
 import { http } from "@/infra/http/axios/client";
 import { z } from "zod";
-import { responseSchema } from "@/app/api/users/unique/[email]/route";
+import { getUserResponseSchema } from "../schemas/get-user-response-schema";
 
 type InputGetUser = {
   email: string;
 };
 
-type OutputGetUser = z.infer<typeof responseSchema>;
+type OutputGetUser = z.infer<typeof getUserResponseSchema>;
 
 export const getUser = async ({
   email,

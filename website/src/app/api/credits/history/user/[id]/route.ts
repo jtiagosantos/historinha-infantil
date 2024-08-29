@@ -1,40 +1,8 @@
 import { fauna } from "@/infra/fauna/client";
-import { CreditsHistoryOperation } from "@/infra/fauna/enums/credits-history-operation";
+import { findCreditsHistoryResponseSchema } from "@/infra/fauna/schemas/find-credits-history-response-schema";
 import { isAxiosError } from "axios";
 import { fql } from "fauna";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-export const responseSchema = z
-  .object({
-    history: z.array(
-      z.object({
-        id: z.string(),
-        credits_quantity: z.number(),
-        text: z.string(),
-        ts: z.object({
-          isoString: z.string(),
-        }),
-        operation: z.enum([
-          CreditsHistoryOperation.EARNING,
-          CreditsHistoryOperation.SPENDING,
-        ]),
-      })
-    ),
-    code: z.number(),
-    message: z.string().nullable(),
-  })
-  .transform((input) => ({
-    history: input.history?.map((history) => ({
-      id: history.id,
-      creditsQuantity: history.credits_quantity,
-      text: history.text,
-      createdAt: history.ts.isoString,
-      operation: history.operation,
-    })),
-    code: input.code,
-    message: input.message,
-  }));
 
 type Context = {
   params: {
@@ -50,7 +18,7 @@ export const GET = async (_: NextRequest, context: Context) => {
       fql`credits_history.byUserId(${id}).order(desc(.ts)).take(10)`
     );
 
-    const response = responseSchema.parse({
+    const response = findCreditsHistoryResponseSchema.parse({
       history: data.data,
       code: 200,
       message: null,

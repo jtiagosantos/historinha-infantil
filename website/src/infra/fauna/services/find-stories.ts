@@ -1,12 +1,12 @@
-import { responseSchema } from "@/app/api/stories/many/user/[userId]/route";
 import { http } from "@/infra/http/axios/client";
 import { z } from "zod";
+import { findStoriesResponseSchema } from "../schemas/find-stories-response-schema";
 
 type InputFindStories = {
   userId: string;
 };
 
-type OutputFindStories = z.infer<typeof responseSchema>;
+type OutputFindStories = z.infer<typeof findStoriesResponseSchema>;
 
 export const findStories = async ({
   userId,

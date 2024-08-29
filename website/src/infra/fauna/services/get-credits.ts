@@ -1,12 +1,12 @@
-import { responseSchema } from "@/app/api/credits/user/[id]/route";
 import { http } from "@/infra/http/axios/client";
 import { z } from "zod";
+import { getCreditsResponseSchema } from "../schemas/get-credits-response-schema";
 
 type InputGetCredits = {
   userId: string;
 };
 
-type OutputGetCredits = z.infer<typeof responseSchema>;
+type OutputGetCredits = z.infer<typeof getCreditsResponseSchema>;
 
 export const getCredits = async ({
   userId,
