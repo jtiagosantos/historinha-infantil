@@ -29,7 +29,7 @@ export const createStory = async ({ preferences }: InputCreateStory): Promise<St
       },
     ],
     model: 'gpt-4o-mini',
-    temperature: 0.2,
+    temperature: 0.4,
     response_format: zodResponseFormat(storySchema, 'story'),
   });
 
