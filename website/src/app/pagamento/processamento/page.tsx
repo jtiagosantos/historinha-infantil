@@ -81,7 +81,7 @@ const PageComponent = () => {
         <>
           <PartyPopper size={90} strokeWidth={1.5} className="mb-6" />
           <p className="font-body font-semibold text-muted-foreground text-[17px] w-full text-center mb-6">
-            Pagamento realizado com sucesso :)
+            Pagamento realizado com sucesso!
           </p>
           <Link
             href={getRedirectURL()}
