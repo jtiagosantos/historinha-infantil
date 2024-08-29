@@ -20,9 +20,9 @@ import { createPaymentCheckout } from '@/infra/stripe/services/create-payment-ch
 import { useToast } from './ui/use-toast';
 
 const PRICE_IDS = {
-  PACKAGE_WITH_ONE_CREDIT: 'price_1Pq3ncGl06TQK25QRcXu4RJA',
-  PACKAGE_WITH_THREE_CREDIS: 'price_1Pq3rwGl06TQK25Qu5OqTfNb',
-  PACKAGE_WITH_FIVE_CREDITS: 'price_1Pq3sRGl06TQK25QHzc2eQQL',
+  PACKAGE_WITH_ONE_CREDIT: 'price_1PsxSaGl06TQK25QoDVeW1RG',
+  PACKAGE_WITH_THREE_CREDIS: 'price_1PsxT5Gl06TQK25QK2kMKekQ',
+  PACKAGE_WITH_FIVE_CREDITS: 'price_1PsxTVGl06TQK25QjU4en8h2',
 };
 
 type BuyCreditsModalProps = {
