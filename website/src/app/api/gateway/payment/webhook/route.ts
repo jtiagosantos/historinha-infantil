@@ -1,5 +1,3 @@
-import Cors from "micro-cors";
-import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/infra/stripe/client";
 import { getUser } from "@/infra/fauna/services/get-user";
@@ -8,10 +6,6 @@ import { registerCredits } from "@/infra/fauna/services/register-credits";
 import { registerCreditsHistory } from "@/infra/fauna/services/register-credits-history";
 import { CreditsHistoryOperation } from "@/infra/fauna/enums/credits-history-operation";
 import { updateCredits } from "@/infra/fauna/services/update-credits";
-
-const cors = Cors({
-  allowMethods: ["POST", "HEAD"],
-});
 
 const secret = process.env.STRIPE_WEBHOOK_SECRET as string;
 
