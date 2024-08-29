@@ -6,5 +6,6 @@ export const bodySchema = z.object({
   }),
   story: z.object({
     id: z.string(),
+    title: z.string(),
   }),
 });

@@ -4,6 +4,7 @@ import { SQSEvent } from 'aws-lambda';
 import { bodySchema } from './schemas/body-schema';
 import { sendEmail } from './infra/resend/services/send-email';
 import { compileEmailTemplate } from './helpers/compile-email-template';
+import { createSlug } from './helpers/create-slug';
 
 export const handler = async (event: SQSEvent) => {
   try {
@@ -23,13 +24,15 @@ export const handler = async (event: SQSEvent) => {
       }
       const emailTemplate = fs.readFileSync(htmlFilePath, 'utf-8');
 
+      const slug = createSlug(story.title).concat('--').concat(story.id);
+
       const { error } = await sendEmail({
         from: 'Historinha Infantil <onboarding@resend.dev>',
         to: user.email,
         subject: 'Historinha criada! 🎉',
         html: compileEmailTemplate(emailTemplate, {
           emailTitle: 'Historinha criada! 🎉',
-          storyLink: `http://localhost:3000/historia/${story.id}`, //TODO: add correct domain
+          storyLink: `https://historinha-infantil.vercel.app/historia/${slug}`,
         }),
       });
 
