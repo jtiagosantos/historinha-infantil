@@ -34,7 +34,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const payload = await request.text();
 
-    const signature = headers().get("stripe-signature")!;
+    const signature = request.headers.get("stripe-signature")!;
 
     const event = stripe.webhooks.constructEvent(payload, signature, secret);
 
